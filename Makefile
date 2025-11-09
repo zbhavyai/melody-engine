@@ -16,7 +16,7 @@ endef
 .deps-container:
 	$(call CHECK_DEPENDENCY, $(CONTAINER_ENGINE))
 
-init:
+init: .deps-container
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@if [ ! -d "$(VENV_DIR)" ]; then \
 		python3 -m venv $(VENV_DIR); \
