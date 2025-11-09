@@ -67,7 +67,7 @@ def main(
             type=str,
         )
 
-    if gain_db == 0.0:
+    if gain_db is None:
         gain_db = click.prompt(
             "Enter gain (dB)",
             default=0.0,
