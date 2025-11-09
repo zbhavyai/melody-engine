@@ -7,7 +7,7 @@
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "extensions.ignoreRecommendations": true,
-  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.typeCheckingMode": "basic",
   "python.defaultInterpreterPath": "./.venv/PY-VENV/bin/python",
   "python.terminal.activateEnvironment": true,
   "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
