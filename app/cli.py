@@ -6,6 +6,8 @@ import click
 
 from app.generator import generate_music
 
+VALID_FORMATS = {"wav", "flac", "mp3"}
+
 
 @click.command()
 @click.option(
@@ -22,16 +24,9 @@ from app.generator import generate_music
 )
 @click.option(
     "--out",
-    "out_path",
+    "out_name",
     type=str,
-    help="Output file path",
-)
-@click.option(
-    "--format",
-    "fmt",
-    type=click.Choice(["wav", "flac", "mp3"]),
-    default=None,
-    help="Output format (default inferred from file extension)",
+    help="Output file name",
 )
 @click.option(
     "--gain",
@@ -42,9 +37,8 @@ from app.generator import generate_music
 def main(
     prompt: str | None,
     duration_s: float | None,
-    out_path: str | None,
-    fmt: str | None,
-    gain_db: float,
+    out_name: str | None,
+    gain_db: float | None,
 ) -> None:
     if prompt is None:
         prompt = click.prompt(
@@ -60,10 +54,10 @@ def main(
             type=float,
         )
 
-    if out_path is None:
-        out_path = click.prompt(
-            "Enter output file path",
-            default="outputs/music.wav",
+    if out_name is None:
+        out_name = click.prompt(
+            "Enter output file name",
+            default="music.mp3",
             type=str,
         )
 
@@ -77,18 +71,30 @@ def main(
     # type checkers should now know all are concrete types
     assert isinstance(prompt, str)
     assert isinstance(duration_s, float)
-    assert isinstance(out_path, str)
+    assert isinstance(out_name, str)
     assert isinstance(gain_db, float)
-
-    if fmt is None:
-        ext = Path(out_path).suffix.lower().lstrip(".")
-        fmt = ext if ext in ("wav", "flac", "mp3") else "wav"
 
     if duration_s <= 0:
         raise click.BadParameter("Duration must be greater than zero.")
 
+    path = Path(out_name)
+    ext = path.suffix.lower().lstrip(".")
+
+    if ext not in VALID_FORMATS:
+        fmt = "mp3"
+        path = path.with_suffix(".mp3")
+    else:
+        fmt = ext
+
+    if not path.suffix:
+        path = path.with_suffix(f".{fmt}")
+
+    output_dir = Path("outputs")
+    output_dir.mkdir(exist_ok=True)
+    out_path = output_dir / path.name
+
     duration_ms = int(round(duration_s * 1000))
-    generate_music(prompt, duration_ms, out_path, fmt, gain_db)
+    generate_music(prompt, duration_ms, str(out_path), fmt, gain_db)
 
 
 if __name__ == "__main__":
