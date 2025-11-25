@@ -1,4 +1,4 @@
-CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1; then echo podman; else echo docker; fi)
+CONTAINER_ENGINE := docker
 REVISION := $(shell git rev-parse --short HEAD)
 VENV_DIR := .venv/PY-VENV
 
@@ -43,7 +43,7 @@ run:
 
 help:
 	@echo "Available targets:"
-	@echo "  init		- Set up py venv and install requirements"
+	@echo "  init       - Set up py venv and install requirements"
 	@echo "  format     - Run format on all python files"
 	@echo "  lint       - Run lint on all python files"
 	@echo "  build      - Build the app package"
