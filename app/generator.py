@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -77,8 +78,10 @@ def _build_container_command(
     cache_path: Path,
     td_path: Path,
 ) -> list[str]:
+    engine = _detect_container_engine()
+
     return [
-        "docker",
+        engine,
         "container",
         "run",
         "--rm",
@@ -97,6 +100,14 @@ def _build_container_command(
         "--output=/io/raw.mp3",
         f"--duration={int(request_s)}",
     ]
+
+
+def _detect_container_engine() -> str:
+    if shutil.which("podman"):
+        return "podman"
+    if shutil.which("docker"):
+        return "docker"
+    raise RuntimeError("No container engine found.")
 
 
 def _apply_gain(samples: np.ndarray, gain_db: float) -> np.ndarray:

@@ -1,4 +1,4 @@
-CONTAINER_ENGINE := docker
+CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1; then echo podman; else echo docker; fi)
 REVISION := $(shell git rev-parse --short HEAD)
 VENV_DIR := .venv/PY-VENV
 
