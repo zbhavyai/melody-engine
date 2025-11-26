@@ -2,7 +2,7 @@ CONTAINER_ENGINE := docker
 REVISION := $(shell git rev-parse --short HEAD)
 VENV_DIR := .venv/PY-VENV
 
-.PHONY: init format lint build run help
+.PHONY: init format lint build clean run help
 
 define CHECK_DEPENDENCY
 	@for cmd in $(1); do \
@@ -37,6 +37,9 @@ build:
 	@. $(VENV_DIR)/bin/activate && \
 	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python -m build --outdir dist
 
+clean:
+	@rm -rf build/ dist/ *.egg-info/
+
 run:
 	@. $(VENV_DIR)/bin/activate && \
 	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python -m app.cli
@@ -47,5 +50,6 @@ help:
 	@echo "  format     - Run format on all python files"
 	@echo "  lint       - Run lint on all python files"
 	@echo "  build      - Build the app package"
+	@echo "  clean      - Clean build artifacts"
 	@echo "  run        - Run the app"
 	@echo "  help       - Show this help message"
