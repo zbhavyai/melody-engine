@@ -33,26 +33,7 @@ def generate_music(
         cache_path.mkdir(parents=True, exist_ok=True)
 
         # build the container command
-        cmd = [
-            "docker",
-            "container",
-            "run",
-            "--rm",
-            "--interactive",
-            "--device",
-            "nvidia.com/gpu=all",
-            "--volume",
-            f"{cache_path}:/magenta-realtime/cache",
-            "--volume",
-            f"{td_path}:/io",
-            "us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu",
-            "python",
-            "-m",
-            "magenta_rt.generate",
-            f"--prompt={prompt}",
-            "--output=/io/raw.mp3",
-            f"--duration={int(request_s)}",
-        ]
+        cmd = _build_container_command(prompt, request_s, cache_path, td_path)
 
         # run container
         subprocess.run(cmd, check=True)
@@ -88,6 +69,34 @@ def generate_music(
             raise ValueError(f"Unsupported format: {fmt}")
 
         print(f"Generated file: {out_p}")
+
+
+def _build_container_command(
+    prompt: str,
+    request_s: float,
+    cache_path: Path,
+    td_path: Path,
+) -> list[str]:
+    return [
+        "docker",
+        "container",
+        "run",
+        "--rm",
+        "--interactive",
+        "--device",
+        "nvidia.com/gpu=all",
+        "--volume",
+        f"{cache_path}:/magenta-realtime/cache",
+        "--volume",
+        f"{td_path}:/io",
+        "us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu",
+        "python",
+        "-m",
+        "magenta_rt.generate",
+        f"--prompt={prompt}",
+        "--output=/io/raw.mp3",
+        f"--duration={int(request_s)}",
+    ]
 
 
 def _apply_gain(samples: np.ndarray, gain_db: float) -> np.ndarray:
