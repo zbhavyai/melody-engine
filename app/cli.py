@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import click
@@ -55,9 +56,10 @@ def main(
         )
 
     if out_name is None:
+        default_name = slugify(prompt) + ".mp3"
         out_name = click.prompt(
             "Enter output file name",
-            default=prompt,
+            default=default_name,
             type=str,
         )
 
@@ -95,6 +97,12 @@ def main(
 
     duration_ms = int(round(duration_s * 1000))
     generate_music(prompt, duration_ms, str(out_path), fmt, gain_db)
+
+
+def slugify(name: str) -> str:
+    name = name.lower()
+    name = re.sub(r"[^a-z0-9]+", "-", name)
+    return name.strip("-")
 
 
 if __name__ == "__main__":
