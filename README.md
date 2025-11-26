@@ -1,8 +1,10 @@
 # Melody Engine
 
-Prompt based instrumental music generation.
+Prompt based instrumental music generation for any given duration.
 
 ## :rocket: Getting started
+
+Build from source and run it locally.
 
 1. Initialize the project
 
@@ -10,7 +12,7 @@ Prompt based instrumental music generation.
    make init
    ```
 
-1. Run the application
+1. Run the interactive CLI
 
    ```shell
    make run
@@ -23,4 +25,28 @@ Prompt based instrumental music generation.
    Enter duration (seconds) [60.0]: 3600
    Enter output file name [music.mp3]: guitar.mp3
    Enter gain (dB) [0.0]: 0
+   ```
+
+1. Your generated audio file will appear in [`outputs`](./outputs) directory.
+
+## :package: Installation
+
+You can also build the wheel package, install it, and run the CLI without the source tree.
+
+1. Build the wheel package
+
+   ```shell
+   make build
+   ```
+1. Install it into any Python environment
+
+   ```shell
+   <activate your virtual environment>
+   pip install dist/melody_engine-*.whl
+   ```
+
+1. Run the interactive CLI from anywhere
+
+   ```shell
+   melody-engine
    ```
