@@ -30,18 +30,20 @@ def generate_music(
 
         # prepare cache directory for magenta_rt
         cache_path = Path("~/.cache/magenta_rt").expanduser()
+        cache_path.mkdir(parents=True, exist_ok=True)
 
+        # build the container command
         cmd = [
             "docker",
             "container",
             "run",
             "--rm",
-            "-i",
-            "--gpus",
-            "device=0",
-            "-v",
+            "--interactive",
+            "--device",
+            "nvidia.com/gpu=all",
+            "--volume",
             f"{cache_path}:/magenta-realtime/cache",
-            "-v",
+            "--volume",
             f"{td_path}:/io",
             "us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu",
             "python",
