@@ -57,7 +57,7 @@ def main(
     if out_name is None:
         out_name = click.prompt(
             "Enter output file name",
-            default="music.mp3",
+            default=prompt,
             type=str,
         )
 
