@@ -32,6 +32,7 @@ def generate_music(
     out_p = Path(out_path)
     out_p.parent.mkdir(parents=True, exist_ok=True)
 
+    # add a safe margin to avoid truncation
     safe_margin_s = 6.0
     request_s = (duration_ms / 1000.0) + safe_margin_s
 
@@ -39,6 +40,7 @@ def generate_music(
         td_path = Path(td)
         raw_path = td_path / "raw.mp3"
 
+        # prepare cache directory for magenta_rt
         cache_path = Path("~/.cache/magenta_rt").expanduser()
 
         cmd = [
@@ -61,8 +63,11 @@ def generate_music(
             "--output=/io/raw.mp3",
             f"--duration={int(request_s)}",
         ]
+
+        # run container
         subprocess.run(cmd, check=True)
 
+        # load the result
         try:
             data_t: tuple[np.ndarray, int] = cast(
                 tuple[np.ndarray, int], sf.read(raw_path, always_2d=True)
@@ -74,9 +79,11 @@ def generate_music(
             samples = np.array(seg.get_array_of_samples()).reshape((-1, seg.channels)) / (2**15)
             data = samples.astype(np.float32)
 
+        # process audio
         data = _apply_gain(data, gain_db)
         data = _trim_to_exact(data, sr, duration_ms)
 
+        # write output
         if fmt == "wav":
             _sf_write(out_p, data, sr, subtype="PCM_16")
         elif fmt == "flac":
