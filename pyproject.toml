@@ -21,6 +21,9 @@ dependencies = [
     "ruff>=0.14.4"
 ]
 
+[project.scripts]
+melody-engine = "app.cli:main"
+
 [build-system]
 requires = ["setuptools>=80", "setuptools-scm>=8", "wheel", "build"]
 build-backend = "setuptools.build_meta"
@@ -68,7 +71,7 @@ no_implicit_optional = true
 ignore_missing_imports = true
 
 [tool.setuptools.packages.find]
-where = ["app"]
+where = ["."]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
