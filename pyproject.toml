@@ -13,6 +13,7 @@ dependencies = [
     "tqdm>=4.66",
     "click>=8.1",
     "pydub>=0.25.1",
+    "audioop-lts; python_version >= '3.13'",
     "setuptools>=80",
     "setuptools-scm>=8",
     "build>=0.10.0",
