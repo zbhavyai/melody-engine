@@ -33,7 +33,7 @@ lint:
 	ruff check --force-exclude -- app && \
 	mypy --pretty -- app
 
-build:
+build: clean
 	@. $(VENV_DIR)/bin/activate && \
 	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python -m build --outdir dist
 
