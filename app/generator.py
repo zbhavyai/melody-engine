@@ -3,23 +3,11 @@ from __future__ import annotations
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import NoReturn, cast
+from typing import cast
 
 import numpy as np
 import soundfile as sf
 from pydub import AudioSegment
-
-
-def _apply_gain(samples: np.ndarray, gain_db: float) -> np.ndarray:
-    if abs(gain_db) < 1e-6:
-        return samples
-    gain = 10 ** (gain_db / 20.0)
-    return np.clip(samples * gain, -1.0, 1.0)
-
-
-def _trim_to_exact(samples: np.ndarray, sr: int, target_ms: int) -> np.ndarray:
-    exact_samples = int(round(target_ms * sr / 1000.0))
-    return samples[:exact_samples]
 
 
 def generate_music(
@@ -95,9 +83,21 @@ def generate_music(
             seg.export(out_p, format="mp3")
             tmpwav.unlink()
         else:
-            _raise_unsupported(fmt)
+            raise ValueError(f"Unsupported format: {fmt}")
 
         print(f"Generated file: {out_p}")
+
+
+def _apply_gain(samples: np.ndarray, gain_db: float) -> np.ndarray:
+    if abs(gain_db) < 1e-6:
+        return samples
+    gain = 10 ** (gain_db / 20.0)
+    return np.clip(samples * gain, -1.0, 1.0)
+
+
+def _trim_to_exact(samples: np.ndarray, sr: int, target_ms: int) -> np.ndarray:
+    exact_samples = int(round(target_ms * sr / 1000.0))
+    return samples[:exact_samples]
 
 
 def _sf_write(
@@ -108,7 +108,3 @@ def _sf_write(
     format: str | None = None,
 ) -> None:
     sf.write(path, data, sr, subtype=subtype, format=format)
-
-
-def _raise_unsupported(fmt: str) -> NoReturn:
-    raise ValueError(f"Unsupported format: {fmt}")
