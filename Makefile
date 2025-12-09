@@ -35,14 +35,14 @@ lint:
 
 build: clean
 	@. $(VENV_DIR)/bin/activate && \
-	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python -m build --outdir dist
+	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3 -m build --outdir dist
 
 clean:
 	@rm -rf build/ dist/ *.egg-info/
 
 run:
 	@. $(VENV_DIR)/bin/activate && \
-	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python -m app.cli
+	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3 -m app.cli
 
 help:
 	@echo "Available targets:"
