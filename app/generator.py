@@ -80,7 +80,7 @@ def _build_container_command(
 ) -> list[str]:
     engine = _detect_container_engine()
 
-    return [
+    cmd = [
         engine,
         "container",
         "run",
@@ -92,6 +92,13 @@ def _build_container_command(
         f"{cache_path}:/magenta-realtime/cache",
         "--volume",
         f"{td_path}:/io",
+    ]
+
+    # Add Podman-specific flag
+    if engine == "podman":
+        cmd += ["--security-opt=label=disable"]
+
+    cmd += [
         "us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu",
         "python3",
         "-m",
@@ -100,6 +107,8 @@ def _build_container_command(
         "--output=/io/raw.mp3",
         f"--duration={int(request_s)}",
     ]
+
+    return cmd
 
 
 def _detect_container_engine() -> str:
