@@ -93,7 +93,7 @@ def _build_container_command(
         "--volume",
         f"{td_path}:/io:rw,Z",
         "us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu",
-        "python3",
+        "python3.12",
         "-m",
         "magenta_rt.generate",
         f"--prompt={prompt}",

@@ -19,7 +19,7 @@ endef
 init: .deps-container
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@if [ ! -d "$(VENV_DIR)" ]; then \
-		python3 -m venv $(VENV_DIR); \
+		python3.12 -m venv $(VENV_DIR); \
 	fi
 	@. $(VENV_DIR)/bin/activate && pip install --upgrade pip && pip install .
 	@$(CONTAINER_ENGINE) image pull us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu
@@ -35,14 +35,14 @@ lint:
 
 build: clean
 	@. $(VENV_DIR)/bin/activate && \
-	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3 -m build --outdir dist
+	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3.12 -m build --outdir dist
 
 clean:
 	@rm -rf build/ dist/ *.egg-info/
 
 run:
 	@. $(VENV_DIR)/bin/activate && \
-	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3 -m app.cli
+	SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) python3.12 -m app.cli
 
 help:
 	@echo "Available targets:"
