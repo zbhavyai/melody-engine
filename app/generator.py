@@ -41,9 +41,7 @@ def generate_music(
 
         # load the result
         try:
-            data_t: tuple[np.ndarray, int] = cast(
-                tuple[np.ndarray, int], sf.read(raw_path, always_2d=True)
-            )
+            data_t: tuple[np.ndarray, int] = cast(tuple[np.ndarray, int], sf.read(raw_path, always_2d=True))
             data, sr = data_t
         except Exception:
             seg = cast(AudioSegment, AudioSegment.from_mp3(raw_path))

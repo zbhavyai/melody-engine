@@ -1,5 +1,9 @@
 {
-  "editor.codeActionsOnSave": { "source.organizeImports": "always", "source.addMissingImports": "always", "source.unusedImports": "always" },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.addMissingImports": "always",
+    "source.unusedImports": "always"
+  },
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
   "files.eol": "\n",

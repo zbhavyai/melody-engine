@@ -38,6 +38,7 @@ You can also build the wheel package, install it, and run the CLI without the so
    ```shell
    make build
    ```
+
 1. Install it into any Python environment
 
    ```shell

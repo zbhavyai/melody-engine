@@ -34,8 +34,8 @@ version_scheme = "no-guess-dev"
 local_scheme = "node-and-date"
 
 [tool.ruff]
-line-length = 100
-target-version = "py313"
+line-length = 120
+target-version = "py312"
 extend-exclude = ["build", "dist", ".venv", "venv", ".mypy_cache"]
 
 [tool.ruff.lint]
