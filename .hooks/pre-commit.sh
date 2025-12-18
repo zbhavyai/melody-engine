@@ -15,15 +15,15 @@ function py_lint() {
         return 0
     fi
 
-    if ! ruff format --check --quiet --force-exclude -- "${staged_py[@]}"; then
+    if ! uv run ruff format --check --quiet --force-exclude -- "${staged_py[@]}"; then
         block "[ERROR] ruff format failed"
     fi
 
-    if ! ruff check --quiet --force-exclude -- "${staged_py[@]}"; then
+    if ! uv run ruff check --quiet --force-exclude -- "${staged_py[@]}"; then
         block "[ERROR] ruff check failed"
     fi
 
-    if ! mypy --pretty -- "${staged_py[@]}"; then
+    if ! uv run mypy --pretty -- "${staged_py[@]}"; then
         block "[ERROR] mypy failed"
     fi
 }

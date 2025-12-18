@@ -12,7 +12,7 @@
   "files.trimTrailingWhitespace": true,
   "extensions.ignoreRecommendations": true,
   "python.analysis.typeCheckingMode": "basic",
-  "python.defaultInterpreterPath": "./.venv/PY-VENV/bin/python",
+  "python.defaultInterpreterPath": "./.venv/bin/python",
   "python.terminal.activateEnvironment": true,
   "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
   "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode", "editor.tabSize": 3 },

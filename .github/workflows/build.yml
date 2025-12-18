@@ -34,25 +34,28 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
-          cache: "pip"
+          python-version-file: "pyproject.toml"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install .
+          uv sync --locked --all-extras --dev
 
       - name: Run ruff format
         run: |
-          ruff format --check --force-exclude -- app
+          uv run ruff format --check --force-exclude -- app
 
       - name: Run ruff lint
         run: |
-          ruff check --force-exclude -- app
+          uv run ruff check --force-exclude -- app
 
       - name: Run mypy typecheck
         run: |
-          mypy --pretty -- app
+          uv run mypy --pretty -- app
 
   build:
     runs-on: ubuntu-latest
@@ -76,16 +79,20 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
-          cache: "pip"
+          python-version-file: "pyproject.toml"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install .
+          uv sync --locked --all-extras --dev
 
       - name: Run build
-        run: SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} python -m build --outdir dist
+        run: |
+          SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} uv run python -m build --outdir dist
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
