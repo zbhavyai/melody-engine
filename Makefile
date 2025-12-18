@@ -31,14 +31,14 @@ build: clean
 	@SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) uv run python -m build --outdir dist
 
 clean:
-	@rm -rf build/ dist/ *.egg-info/
+	@rm -rf build/ dist/ *.egg-info/ .venv/ .mypy_cache/ .ruff_cache/
 
 run:
 	@SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+$(REVISION) uv run python -m app.cli
 
 help:
 	@echo "Available targets:"
-	@echo "  init       - Set up uv environment and install requirements"
+	@echo "  init       - Set up environment and install dependencies"
 	@echo "  format     - Run format on all python files"
 	@echo "  lint       - Run lint on all python files"
 	@echo "  build      - Build the app package"
