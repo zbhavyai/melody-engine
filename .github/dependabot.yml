@@ -1,0 +1,38 @@
+---
+version: 2
+
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    assignees:
+      - "zbhavyai"
+    open-pull-requests-limit: 1
+    groups:
+      all-python-dependencies:
+        patterns:
+          - "*"
+    pull-request-branch-name:
+      separator: "-"
+    cooldown:
+      default-days: 5
+      semver-major-days: 15
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    assignees:
+      - "zbhavyai"
+    open-pull-requests-limit: 1
+    groups:
+      all-gh-actions-dependencies:
+        patterns:
+          - "*"
+    pull-request-branch-name:
+      separator: "-"
