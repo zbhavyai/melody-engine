@@ -12,7 +12,7 @@ updates:
       - "zbhavyai"
     open-pull-requests-limit: 1
     groups:
-      all-python-dependencies:
+      python-dependencies:
         patterns:
           - "*"
     pull-request-branch-name:
@@ -31,7 +31,7 @@ updates:
       - "zbhavyai"
     open-pull-requests-limit: 1
     groups:
-      all-gh-actions-dependencies:
+      actions-dependencies:
         patterns:
           - "*"
     pull-request-branch-name:
