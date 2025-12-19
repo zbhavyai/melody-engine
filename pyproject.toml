@@ -8,29 +8,26 @@ requires-python = "==3.12.*"
 license = "MIT"
 license-files = ["LICENSE"]
 dependencies = [
-    "soundfile>=0.12.1",
-    "numpy>=1.23",
-    "tqdm>=4.66",
-    "click>=8.1",
-    "pydub>=0.25.1",
+    "soundfile",
+    "numpy",
+    "tqdm",
+    "click",
+    "pydub",
     "audioop-lts; python_version >= '3.13'",
+    "setuptools",
+    "setuptools-scm",
+    "wheel",
+    "build",
 ]
 
 [dependency-groups]
-dev = [
-    "setuptools>=80",
-    "setuptools-scm>=8",
-    "build>=0.10.0",
-    "black>=25.0",
-    "mypy>=1.18.2",
-    "ruff>=0.14.4",
-]
+dev = ["mypy", "ruff"]
 
 [project.scripts]
 melody-engine = "app.cli:main"
 
 [build-system]
-requires = ["setuptools>=80", "setuptools-scm>=8", "wheel", "build"]
+requires = ["setuptools", "setuptools-scm", "wheel", "build"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
