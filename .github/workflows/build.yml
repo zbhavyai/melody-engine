@@ -42,20 +42,16 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: |
-          uv sync --locked --all-extras --dev
+        run: uv sync --locked --only-group dev
 
       - name: Run ruff format
-        run: |
-          uv run ruff format --check --force-exclude -- app
+        run: uv run ruff format --check --force-exclude -- app
 
       - name: Run ruff lint
-        run: |
-          uv run ruff check --force-exclude -- app
+        run: uv run ruff check --force-exclude -- app
 
       - name: Run mypy typecheck
-        run: |
-          uv run mypy --pretty -- app
+        run: uv run mypy --pretty -- app
 
   build:
     runs-on: ubuntu-latest
@@ -87,12 +83,10 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: |
-          uv sync --locked --all-extras --dev
+        run: uv sync --locked --no-group dev
 
       - name: Run build
-        run: |
-          SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} uv run python -m build --outdir dist
+        run: SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} uv run python -m build --outdir dist
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v6
