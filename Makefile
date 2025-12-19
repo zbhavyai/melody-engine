@@ -3,19 +3,7 @@ REVISION := $(shell git rev-parse --short HEAD)
 
 .PHONY: init format lint build clean run help
 
-define CHECK_DEPENDENCY
-	@for cmd in $(1); do \
-		if ! command -v $$cmd >/dev/null 2>&1; then \
-			echo "Couldn't find $$cmd!"; \
-			exit 1; \
-		fi; \
-	done
-endef
-
-.deps:
-	$(call CHECK_DEPENDENCY, $(CONTAINER_ENGINE) uv)
-
-init: .deps
+init:
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@uv sync
 	@$(CONTAINER_ENGINE) image pull us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu
