@@ -5,8 +5,6 @@ description = "Prompt based instrumental music generation"
 authors = [{ name = "Bhavyai Gupta" }]
 readme = "README.md"
 requires-python = "==3.12.*"
-license = "MIT"
-license-files = ["LICENSE"]
 dependencies = [
     "soundfile",
     "numpy",
@@ -14,6 +12,9 @@ dependencies = [
     "click",
     "pydub",
     "audioop-lts; python_version >= '3.13'",
+    "fastapi[standard]",
+    "pydantic",
+    "pydantic-settings",
     "setuptools",
     "setuptools-scm",
     "wheel",
@@ -31,7 +32,7 @@ requires = ["setuptools", "setuptools-scm", "wheel", "build"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["app"]
 
 [tool.setuptools_scm]
 version_scheme = "no-guess-dev"
