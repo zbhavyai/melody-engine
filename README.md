@@ -1,5 +1,8 @@
 # Melody Engine
 
+![Build](https://github.com/zbhavyai/melody-engine/actions/workflows/build.yml/badge.svg)
+![Release](https://github.com/zbhavyai/melody-engine/actions/workflows/release.yml/badge.svg)
+
 Prompt based instrumental music generation for any given duration.
 
 ## :rocket: Getting started
