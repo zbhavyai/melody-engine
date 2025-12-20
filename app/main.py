@@ -12,6 +12,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.settings import settings
+from app.service.job_manager import JobManager
 
 
 def configure_logging() -> None:
@@ -64,7 +65,12 @@ async def lifespan(application: FastAPI) -> AsyncIterator[None]:
     logger.info("Starting application")
     logger.info("--------------------------------------------------------------------------------")
 
+    manager = JobManager()
+    await manager.start_worker()
+
     yield
+
+    await manager.stop_worker()
 
     logger.info("--------------------------------------------------------------------------------")
     logger.info("Shutting down application")
