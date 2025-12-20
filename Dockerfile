@@ -8,7 +8,7 @@ ENV SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /opt/app
 COPY pyproject.toml uv.lock ./
-RUN uv pip install --system --no-deps -r pyproject.toml
+RUN uv pip install --system -r pyproject.toml
 COPY app/ ./app/
 EXPOSE 8080
 CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
