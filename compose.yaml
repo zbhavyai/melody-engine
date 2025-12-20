@@ -10,6 +10,8 @@ services:
     image: localhost/melody-engine:${REVISION}
     container_name: melody-engine
     restart: unless-stopped
+    environment:
+      - TF_GPU_ALLOCATOR=cuda_malloc_async
     volumes:
       - ./outputs:/opt/app/outputs:rw,Z
       - ~/.cache/melody-engine:/magenta-realtime/cache:rw,Z
