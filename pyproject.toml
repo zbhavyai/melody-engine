@@ -10,7 +10,7 @@ dependencies = [
     "numpy",
     "tqdm",
     "click",
-    "pydub",
+    "pozalabs-pydub",
     "audioop-lts; python_version >= '3.13'",
     "fastapi[standard]",
     "pydantic",
