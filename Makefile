@@ -21,7 +21,7 @@ dev:
 	@SETUPTOOLS_SCM_PRETEND_VERSION=$(LAST_TAG)+$(REVISION) uv run fastapi dev app/main.py --host 0.0.0.0 --port 8080
 
 run:
-	@SETUPTOOLS_SCM_PRETEND_VERSION=$(LAST_TAG)+$(REVISION) uv run fastapi run app/main.py --host 0.0.0.0 --port 8080
+	@SETUPTOOLS_SCM_PRETEND_VERSION=$(LAST_TAG)+$(REVISION) uv run uvicorn app.main:app --host 0.0.0.0 --port 8080
 
 build: clean
 	@SETUPTOOLS_SCM_PRETEND_VERSION=$(LAST_TAG)+$(REVISION) uv run python -m build --outdir dist

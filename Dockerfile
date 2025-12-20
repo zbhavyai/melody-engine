@@ -13,4 +13,4 @@ RUN apt-get update && apt-get install -y ffmpeg
 RUN uv pip install --system -r pyproject.toml
 COPY app/ ./app/
 EXPOSE 8080
-CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
