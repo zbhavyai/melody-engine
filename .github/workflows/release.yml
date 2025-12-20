@@ -35,6 +35,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CURRENT_TAG: ${{ github.ref_name }}
         run: |
+          PREV_TAG=$(git tag -l "v*" | sort -V | grep -v "^${CURRENT_TAG}$" | tail -n 1 || true)
+          REPO="${{ github.repository }}"
+
+          if [ -n "${PREV_TAG}" ]; then
+            BODY="Full Changelog: https://github.com/${REPO}/compare/${PREV_TAG}...${CURRENT_TAG}"
+          else
+            BODY="Full Changelog: https://github.com/${REPO}/commits/${CURRENT_TAG}"
+          fi
+
           LATEST_TAG=$(git tag -l "v*" | sort -V | tail -n 1)
 
           if [ "${CURRENT_TAG}" = "${LATEST_TAG}" ]; then
@@ -50,7 +59,7 @@ jobs:
             echo "Attaching artifact: ${RELEASE_FILES}"
             gh release create "${CURRENT_TAG}" \
               --title "${CURRENT_TAG}" \
-              --generate-notes \
+              --notes "${BODY}" \
               ${LATEST_FLAG} \
               "${RELEASE_FILES[@]}"
           fi
