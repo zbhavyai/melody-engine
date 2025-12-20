@@ -3,7 +3,8 @@ ARG REVISION
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    UV_SYSTEM_PYTHON=1
+    UV_SYSTEM_PYTHON=1 \
+    UV_BREAK_SYSTEM_PACKAGES=1
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /opt/app
 COPY pyproject.toml uv.lock ./
