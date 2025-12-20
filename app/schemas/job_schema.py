@@ -17,7 +17,7 @@ class JobStatus(str, Enum):
 
 
 class JobInfo(_FromORM):
-    job_id: UUID = Field(..., description="Job identifier")
+    id: UUID = Field(..., description="Job identifier")
     status: JobStatus = Field(..., description="Job status")
     prompt: str = Field(..., description="Prompt used for generation")
     created_at: datetime = Field(..., description="Timestamp when the job was created")
@@ -33,6 +33,6 @@ class JobSubmitRequest(BaseModel):
 
 
 class JobSubmitResponse(BaseModel):
-    job_id: UUID = Field(..., description="Job identifier")
+    id: UUID = Field(..., description="Job identifier")
     status: JobStatus = Field(..., description="Job status")
     message: str = Field(..., description="Job submission message")
