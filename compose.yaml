@@ -12,6 +12,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./outputs:/opt/app/outputs:rw,Z
+      - ~/.cache/melody-engine:/magenta-realtime/cache:rw,Z
     ports:
       - "8080:8080"
     networks:
