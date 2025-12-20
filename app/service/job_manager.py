@@ -37,7 +37,7 @@ class JobManager:
         """
 
         logger.info("Starting background worker...")
-        self.engine.load_magentart_in_memory()
+        await asyncio.to_thread(self.engine.load_magentart_in_memory)
         self.worker_task = asyncio.create_task(self._worker())
         logger.info("Background worker started.")
 
