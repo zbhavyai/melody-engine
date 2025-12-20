@@ -1,0 +1,29 @@
+name: melody-engine
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REVISION: "${REVISION}"
+    image: localhost/melody-engine:${REVISION}
+    container_name: melody-engine
+    restart: unless-stopped
+    volumes:
+      - ./outputs:/opt/app/outputs:rw,Z
+    ports:
+      - "8080:8080"
+    networks:
+      - net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+networks:
+  net:
+    driver: bridge
