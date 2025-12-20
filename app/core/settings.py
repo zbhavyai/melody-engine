@@ -25,6 +25,16 @@ class Settings(BaseSettings):
     # -------------------------------------------------------------------------
     output_dir: Path = Path.home() / ".melodyengine" / "outputs"
 
+    # ------------------------------------------------------------------------
+    # MAGENTA RT SETTINGS
+    # ------------------------------------------------------------------------
+    # model tag is base or large
+    magenta_tag: str = "large"
+    # device can be gpu, tpu:v2-8, or None (for CPU)
+    magenta_device: str = "gpu"
+    # whether to use lazy loading
+    magenta_lazy: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
