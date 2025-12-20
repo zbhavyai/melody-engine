@@ -1,5 +1,6 @@
 CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1; then echo podman; else echo docker; fi)
 LAST_TAG := $(shell git describe --tags --abbrev=0 --match "v*.*.*" 2>/dev/null || echo "v0.0.0")
+VERSION := $(patsubst v%,%,$(LAST_TAG))
 REVISION := $(shell git rev-parse --short HEAD)
 
 .PHONY: init format lint dev run build clean container-build container-run container-stop container-logs container-destroy help
@@ -29,19 +30,19 @@ clean:
 	@rm -rf build/ dist/ *.egg-info/ .venv/ .mypy_cache/ .ruff_cache/
 
 container-build:
-	@REVISION=$(LAST_TAG)+$(REVISION) $(CONTAINER_ENGINE) compose build
+	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose build
 
 container-run:
-	@REVISION=$(LAST_TAG)+$(REVISION) $(CONTAINER_ENGINE) compose up --detach
+	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose up --detach
 
 container-stop:
-	@REVISION=$(LAST_TAG)+$(REVISION) $(CONTAINER_ENGINE) compose down
+	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose down
 
 container-logs:
-	@REVISION=$(LAST_TAG)+$(REVISION) $(CONTAINER_ENGINE) compose logs --follow
+	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose logs --follow
 
 container-destroy:
-	@REVISION=$(LAST_TAG)+$(REVISION) $(CONTAINER_ENGINE) compose down --volumes --rmi local
+	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose down --volumes --rmi local
 
 help:
 	@echo "Available targets:"
