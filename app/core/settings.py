@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     # LOGGING
     # -------------------------------------------------------------------------
     log_level: str = "INFO"
-    log_file: Path = Path.home() / ".melodyengine" / "app.log"
+    log_file: Path = Path("logs") / "app.log"
     log_file_max_size: int = 25 * 1024 * 1024
     log_file_backup_count: int = 7
     log_format: str = "%(asctime)s %(levelname)-7s [%(name)s] (%(threadName)s) %(message)s"
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # -------------------------------------------------------------------------
     # GENERATION SETTINGS
     # -------------------------------------------------------------------------
-    output_dir: Path = Path.home() / ".melodyengine" / "outputs"
+    output_dir: Path = Path("outputs")
 
     # ------------------------------------------------------------------------
     # INFERENCE QUEUE SETTINGS
