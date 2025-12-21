@@ -156,4 +156,5 @@ class JobManager:
 
         text = text.lower()
         text = re.sub(r"[^a-z0-9]+", "-", text)
-        return text.strip("-")[:50]
+        max_len = settings.filename_trim_length
+        return text.strip("-")[:max_len]

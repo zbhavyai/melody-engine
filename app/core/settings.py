@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     # GENERATION SETTINGS
     # -------------------------------------------------------------------------
     output_dir: Path = Path("outputs")
+    filename_trim_length: int = 50
 
     # ------------------------------------------------------------------------
     # INFERENCE QUEUE SETTINGS
