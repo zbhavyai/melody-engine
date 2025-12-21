@@ -5,12 +5,30 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import FileResponse
 
-from app.schemas.job_schema import Job, JobAcknowledgment, JobRequest
+from app.schemas.job_schema import Job, JobAcknowledgment, JobRequest, JobStatus
 from app.service.job_manager import JobManager
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 job_manager = JobManager()
+
+
+@router.get(
+    "",
+    response_model=list[Job],
+)
+async def list_jobs(filter_status: JobStatus | None = None) -> list[Job]:
+    """
+    List all jobs, optionally filtered by status.
+    """
+    logger.debug("list_jobs")
+
+    jobs: list[Job] = list(job_manager.jobs.values())
+
+    if filter_status is not None:
+        jobs = [job for job in jobs if job.status == filter_status]
+
+    return [Job.model_validate(job) for job in jobs]
 
 
 @router.post(
@@ -54,12 +72,11 @@ async def get_job_status(job_id: UUID) -> Job:
     "/{job_id}/download",
     response_class=FileResponse,
 )
-async def download_file(job_id: UUID) -> FileResponse:
+async def download_job_artifact(job_id: UUID) -> FileResponse:
     """
     Download the output file for a completed job.
     """
-    logger.debug("download_file")
-
+    logger.debug("download_job_artifact")
     try:
         path = job_manager.get_file_path_for_job(job_id)
 
