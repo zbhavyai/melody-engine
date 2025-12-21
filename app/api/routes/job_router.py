@@ -25,7 +25,7 @@ async def request_generation(request: JobRequest) -> JobAcknowledgment:
         return JobAcknowledgment.model_validate(jobAck)
     except asyncio.QueueFull:
         logger.error("Job queue is full")
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Queue is full")
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Queue is full")
 
 
 @router.get(
