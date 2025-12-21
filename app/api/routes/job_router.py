@@ -18,6 +18,9 @@ job_manager = JobManager()
     response_model=JobAcknowledgment,
 )
 async def request_generation(request: JobRequest) -> JobAcknowledgment:
+    """
+    Submit a new job for audio generation.
+    """
     logger.debug("request_generation")
 
     try:
@@ -33,6 +36,9 @@ async def request_generation(request: JobRequest) -> JobAcknowledgment:
     response_model=Job,
 )
 async def get_job_status(job_id: UUID) -> Job:
+    """
+    Get the status of a job by its ID.
+    """
     logger.debug("get_job_status")
 
     job = job_manager.get_job(job_id)
@@ -49,6 +55,9 @@ async def get_job_status(job_id: UUID) -> Job:
     response_class=FileResponse,
 )
 async def download_file(job_id: UUID) -> FileResponse:
+    """
+    Download the output file for a completed job.
+    """
     logger.debug("download_file")
 
     try:
