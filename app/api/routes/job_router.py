@@ -44,8 +44,8 @@ async def get_job_status(job_id: UUID) -> Job:
     return Job.model_validate(job)
 
 
-@router.post(
-    "/{job_id}",
+@router.get(
+    "/{job_id}/download",
     response_class=FileResponse,
 )
 async def download_file(job_id: UUID) -> FileResponse:
