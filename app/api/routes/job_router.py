@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
 
-from app.schemas.job_schema import JobInfo, JobSubmitRequest, JobSubmitResponse
+from app.schemas.job_schema import Job, JobAcknowledgment, JobRequest
 from app.service.job_manager import JobManager
 
 logger = logging.getLogger(__name__)
@@ -13,29 +13,24 @@ job_manager = JobManager()
 
 
 @router.post(
-    "/generate",
-    response_model=JobSubmitResponse,
+    "",
+    response_model=JobAcknowledgment,
 )
-async def request_generation(request: JobSubmitRequest) -> JobSubmitResponse:
+async def request_generation(request: JobRequest) -> JobAcknowledgment:
     logger.debug("request_generation")
 
-    job = await job_manager.submit_job(request)
-    return JobSubmitResponse(
-        id=job.id,
-        status=job.status,
-        message="Job submitted successfully",
-    )
+    return await job_manager.submit_job(request)
 
 
 @router.get(
-    "/status/{job_id}",
-    response_model=JobInfo,
+    "/{job_id}",
+    response_model=Job,
 )
-async def get_job_status(job_id: UUID) -> JobInfo:
+async def get_job_status(job_id: UUID) -> Job:
     logger.debug("get_job_status")
 
     job = job_manager.get_job(job_id)
-    return JobInfo.model_validate(job)
+    return Job.model_validate(job)
 
 
 @router.get(

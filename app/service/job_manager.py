@@ -9,8 +9,7 @@ from pathlib import Path
 from uuid import UUID
 
 from app.core.settings import settings
-from app.models.job_model import Job
-from app.schemas.job_schema import JobStatus, JobSubmitRequest
+from app.schemas.job_schema import Job, JobAcknowledgment, JobRequest, JobStatus
 from app.service.engine import AudioEngine
 
 logger = logging.getLogger(__name__)
@@ -36,7 +35,7 @@ class JobManager:
         Starts the background worker.
         """
 
-        logger.info("Starting background worker...")
+        logger.info("Starting background worker")
         await asyncio.to_thread(self.engine.load_magentart_in_memory)
         self.worker_task = asyncio.create_task(self._worker())
         logger.info("Background worker started.")
@@ -46,40 +45,43 @@ class JobManager:
         Stops the background worker.
         """
 
+        logger.info("Stopping background worker")
         if self.worker_task:
             self.worker_task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await self.worker_task
 
-    async def submit_job(self, request: JobSubmitRequest) -> Job:
+    async def submit_job(self, request: JobRequest) -> JobAcknowledgment:
         """
         Submits a job.
         Raises asyncio.QueueFull if queue is full.
         """
 
-        job = Job(id=uuid.uuid4(), request=request)
-        logger.info(f"Create job with id={job.id}")
+        job = Job.from_request(id=uuid.uuid4(), request=request)
+        logger.info("Creating job with id=%s", job.id)
+        logger.debug("Job details: %s", job)
 
         # this raises QueueFull immediately if the queue is full
         self.queue.put_nowait(job.id)
 
         self.jobs[job.id] = job
-        logger.info(f"Job submitted {job.id}")
+        logger.info("Job submitted with id=%s", job.id)
+        return job.to_acknowledgment()
 
-        return job
-
-    def get_job(self, job_id: UUID) -> Job | None:
+    def get_job(self, id: UUID) -> Job | None:
         """
-        Retrieves a job by its ID.
+        Retrieves a job by ID.
         """
 
-        return self.jobs.get(job_id)
+        logger.info("Get job by id=%s", id)
+        return self.jobs.get(id)
 
     def get_file_path(self, filename: str) -> Path:
         """
         Retrieves the file path for a given filename.
         """
 
+        logger.info(f"Retrieve file path for filename={filename}")
         return Path(settings.output_dir) / filename
 
     async def _worker(self) -> None:
@@ -87,41 +89,44 @@ class JobManager:
         Infinite loop processing jobs from the queue.
         """
 
-        logger.info("Starting worker loop...")
+        logger.info("Starting worker loop")
         while True:
             try:
                 job_id = await self.queue.get()
                 job = self.jobs[job_id]
 
                 job.status = JobStatus.PROCESSING
-                logger.info(f"Processing job {job_id}")
+                logger.info("Processing job with id=%s", job_id)
 
                 try:
                     # prepare output path
-                    slug = self._slugify(job.request.prompt)
+                    slug = self._slugify(job.prompt)
 
                     # use string representation of UUID for filename
-                    filename = f"{slug}_{str(job_id)[:8]}.{job.request.format}"
+                    filename = f"{slug}-{str(job_id)[:8]}.{job.format}"
                     out_path = Path(settings.output_dir) / filename
+
+                    # update the job with output path
+                    job.output_name = filename
 
                     # run blocking engine in a separate thread
                     await asyncio.to_thread(
                         self.engine.generate_music,
-                        prompt=job.request.prompt,
-                        duration_ms=int(job.request.duration_s * 1000),
+                        prompt=job.prompt,
+                        duration_ms=int(job.duration_s * 1000),
                         out_path=str(out_path),
-                        fmt=job.request.format,
-                        gain_db=job.request.gain_db,
+                        fmt=job.format,
+                        gain_db=job.gain_db,
                     )
 
-                    job.filename = filename
+                    job.output_name = filename
                     job.status = JobStatus.COMPLETED
-                    logger.info(f"Job {job_id} COMPLETED")
+                    logger.info("Job with id=%s COMPLETED", job_id)
 
                 except Exception as e:
-                    logger.error(f"Job {job_id} FAILED: {e}")
+                    logger.error("Job with id=%s FAILED: %s", job_id, e)
                     job.status = JobStatus.FAILED
-                    job.error = str(e)
+                    job.message = str(e)
                 finally:
                     self.queue.task_done()
 
