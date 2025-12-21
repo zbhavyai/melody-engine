@@ -45,15 +45,29 @@ async def get_job_status(job_id: UUID) -> Job:
 
 
 @router.post(
-    "{job_id}",
+    "/{job_id}",
     response_class=FileResponse,
 )
-async def download_file(filename: str) -> FileResponse:
+async def download_file(job_id: UUID) -> FileResponse:
     logger.debug("download_file")
 
-    path = job_manager.get_file_path(filename)
-    return FileResponse(
-        path=path,
-        media_type=f"audio/{path.suffix.lstrip('.')}",
-        filename=filename,
-    )
+    try:
+        path = job_manager.get_file_path_for_job(job_id)
+
+        if not path.exists():
+            raise FileNotFoundError(f"No output file found for job id={job_id}")
+
+        return FileResponse(
+            path=path,
+            media_type=f"audio/{path.suffix.lstrip('.')}",
+            filename=path.name,
+        )
+    except KeyError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.args[0])
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=e.args[0])
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.args[0])
+    except Exception as e:
+        logger.error("Unexpected error while retrieving file for job id=%s: %s", job_id, str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

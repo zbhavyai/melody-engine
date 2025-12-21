@@ -76,13 +76,26 @@ class JobManager:
         logger.info("Get job by id=%s", id)
         return self.jobs.get(id)
 
-    def get_file_path(self, filename: str) -> Path:
+    def get_file_path_for_job(self, id: UUID) -> Path:
         """
-        Retrieves the file path for a given filename.
+        Retrieves the file path for a given job.
         """
 
-        logger.info(f"Retrieve file path for filename={filename}")
-        return Path(settings.output_dir) / filename
+        job = self.get_job(id)
+
+        if job is None:
+            logger.error("Job not found with id=%s", id)
+            raise KeyError("Job not found")
+        if job.status != JobStatus.COMPLETED:
+            logger.error("Job with id=%s isn't completed yet", id)
+            raise ValueError("Job isn't completed yet")
+        if not job.output_name:
+            logger.error("No output file found for job id=%s", id)
+            raise FileNotFoundError(f"No output file found for job id={id}")
+
+        path = Path(settings.output_dir) / job.output_name
+        logger.info(f"Retrieve file path for job id={id}: {path}")
+        return path
 
     async def _worker(self) -> None:
         """
