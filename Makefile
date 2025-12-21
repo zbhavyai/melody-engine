@@ -10,6 +10,9 @@ init:
 	@mkdir -p outputs
 	@uv sync
 
+clean:
+	@rm -rf build/ dist/ *.egg-info/ .venv/ .mypy_cache/ .ruff_cache/
+
 format:
 	@uv run ruff format --force-exclude -- app
 
@@ -25,9 +28,6 @@ run:
 
 build: clean
 	@SETUPTOOLS_SCM_PRETEND_VERSION=$(LAST_TAG)+$(REVISION) uv run python -m build --outdir dist
-
-clean:
-	@rm -rf build/ dist/ *.egg-info/ .venv/ .mypy_cache/ .ruff_cache/
 
 container-build:
 	@REVISION=$(VERSION) $(CONTAINER_ENGINE) compose build
@@ -47,12 +47,12 @@ container-destroy:
 help:
 	@echo "Available targets:"
 	@echo "  init               - Set up environment and install dependencies"
+	@echo "  clean              - Clean build artifacts and remove environment"
 	@echo "  format             - Run format on all python files"
 	@echo "  lint               - Run lint on all python files"
 	@echo "  dev                - Run the app in development mode"
 	@echo "  run                - Run the app"
 	@echo "  build              - Build the app package"
-	@echo "  clean              - Clean build artifacts"
 	@echo "  container-build	- Build the container image"
 	@echo "  container-run      - Run the container"
 	@echo "  container-stop     - Stop the container"
