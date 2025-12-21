@@ -21,8 +21,8 @@ async def request_generation(request: JobRequest) -> JobAcknowledgment:
     logger.debug("request_generation")
 
     try:
-        jobAck = await job_manager.submit_job(request)
-        return JobAcknowledgment.model_validate(jobAck)
+        job_ack = await job_manager.submit_job(request)
+        return JobAcknowledgment.model_validate(job_ack)
     except asyncio.QueueFull:
         logger.error("Job queue is full")
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Queue is full")

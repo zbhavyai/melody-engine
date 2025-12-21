@@ -43,13 +43,13 @@ class Job(_FromORM):
     @classmethod
     def from_request(
         cls,
-        id: UUID,
+        job_id: UUID,
         request: JobRequest,
         output_name: str = "",
         message: str = "",
     ) -> "Job":
         return cls(
-            id=id,
+            id=job_id,
             prompt=request.prompt,
             duration_s=request.duration_s,
             gain_db=request.gain_db,

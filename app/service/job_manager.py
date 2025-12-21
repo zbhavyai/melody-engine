@@ -36,7 +36,7 @@ class JobManager:
         """
 
         logger.info("Starting background worker")
-        await asyncio.to_thread(self.engine.load_magentart_in_memory)
+        await asyncio.to_thread(self.engine.load_magenta_rt_in_memory)
         self.worker_task = asyncio.create_task(self._worker())
         logger.info("Background worker started.")
 
@@ -57,7 +57,7 @@ class JobManager:
         Raises asyncio.QueueFull if queue is full.
         """
 
-        job = Job.from_request(id=uuid.uuid4(), request=request)
+        job = Job.from_request(job_id=uuid.uuid4(), request=request)
         logger.info("Creating job with id=%s", job.id)
         logger.debug("Job details: %s", job)
 
@@ -68,33 +68,33 @@ class JobManager:
         logger.info("Job submitted with id=%s", job.id)
         return job.to_acknowledgment()
 
-    def get_job(self, id: UUID) -> Job | None:
+    def get_job(self, job_id: UUID) -> Job | None:
         """
         Retrieves a job by ID.
         """
 
-        logger.info("Get job by id=%s", id)
-        return self.jobs.get(id)
+        logger.info("Get job by id=%s", job_id)
+        return self.jobs.get(job_id)
 
-    def get_file_path_for_job(self, id: UUID) -> Path:
+    def get_file_path_for_job(self, job_id: UUID) -> Path:
         """
         Retrieves the file path for a given job.
         """
 
-        job = self.get_job(id)
+        job = self.get_job(job_id)
 
         if job is None:
-            logger.error("Job not found with id=%s", id)
+            logger.error("Job not found with id=%s", job_id)
             raise KeyError("Job not found")
         if job.status != JobStatus.COMPLETED:
-            logger.error("Job with id=%s isn't completed yet", id)
+            logger.error("Job with id=%s isn't completed yet", job_id)
             raise ValueError("Job isn't completed yet")
         if not job.output_name:
-            logger.error("No output file found for job id=%s", id)
-            raise FileNotFoundError(f"No output file found for job id={id}")
+            logger.error("No output file found for job id=%s", job_id)
+            raise FileNotFoundError(f"No output file found for job id={job_id}")
 
         path = Path(settings.output_dir) / job.output_name
-        logger.info(f"Retrieve file path for job id={id}: {path}")
+        logger.info(f"Retrieve file path for job id={job_id}: {path}")
         return path
 
     async def _worker(self) -> None:
@@ -149,7 +149,8 @@ class JobManager:
                 logger.error(f"Unexpected worker error: {e}")
                 await asyncio.sleep(5)
 
-    def _slugify(self, text: str) -> str:
+    @staticmethod
+    def _slugify(text: str) -> str:
         """
         Creates a URL-friendly slug of max length 50 from the given text.
         """

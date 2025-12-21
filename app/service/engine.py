@@ -29,7 +29,7 @@ class AudioEngine:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def load_magentart_in_memory(self) -> None:
+    def load_magenta_rt_in_memory(self) -> None:
         """
         Loads the MagentaRT model into memory.
         """
@@ -137,8 +137,8 @@ class AudioEngine:
         logger.info("Generation complete -> %s", out_p)
         return out_p
 
+    @staticmethod
     def _apply_gain(
-        self,
         samples: np.ndarray,
         gain_db: float,
     ) -> np.ndarray:
@@ -151,8 +151,8 @@ class AudioEngine:
         gain = 10 ** (gain_db / 20.0)
         return np.clip(samples * gain, -1.0, 1.0)
 
+    @staticmethod
     def _trim_to_exact(
-        self,
         samples: np.ndarray,
         sr: int,
         target_ms: int,
@@ -166,8 +166,8 @@ class AudioEngine:
             return samples
         return samples[:exact_samples]
 
+    @staticmethod
     def _sf_write(
-        self,
         path: Path,
         data: np.ndarray,
         sr: int,
