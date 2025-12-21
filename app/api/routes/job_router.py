@@ -16,6 +16,7 @@ job_manager = JobManager()
 @router.get(
     "",
     response_model=list[Job],
+    status_code=status.HTTP_200_OK,
 )
 async def list_jobs(filter_status: JobStatus | None = None) -> list[Job]:
     """
@@ -34,6 +35,7 @@ async def list_jobs(filter_status: JobStatus | None = None) -> list[Job]:
 @router.post(
     "",
     response_model=JobAcknowledgment,
+    status_code=status.HTTP_202_ACCEPTED,
 )
 async def request_generation(request: JobRequest) -> JobAcknowledgment:
     """
@@ -52,6 +54,7 @@ async def request_generation(request: JobRequest) -> JobAcknowledgment:
 @router.get(
     "/{job_id}",
     response_model=Job,
+    status_code=status.HTTP_200_OK,
 )
 async def get_job_status(job_id: UUID) -> Job:
     """
@@ -71,6 +74,7 @@ async def get_job_status(job_id: UUID) -> Job:
 @router.get(
     "/{job_id}/download",
     response_class=FileResponse,
+    status_code=status.HTTP_200_OK,
 )
 async def download_job_artifact(job_id: UUID) -> FileResponse:
     """
