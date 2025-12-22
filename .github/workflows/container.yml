@@ -1,0 +1,64 @@
+---
+name: Container
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  container:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate semver tag
+        run: |
+          if ! [[ "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Not a semver tag, exiting."
+            exit 1
+          fi
+
+      - name: Compute version metadata
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          MAJOR="$(cut -d. -f1 <<< "$VERSION")"
+          MINOR="$(cut -d. -f1,2 <<< "$VERSION")"
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+          echo "MINOR=$MINOR" >> $GITHUB_ENV
+
+          LATEST_TAG="$(git tag -l 'v*.*.*' | sort -V | tail -n 1)"
+
+          if [ "v$VERSION" = "$LATEST_TAG" ]; then
+            echo "IS_LATEST=true" >> $GITHUB_ENV
+          else
+            echo "IS_LATEST=false" >> $GITHUB_ENV
+          fi
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            REVISION=${{ env.VERSION }}
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.IMAGE_NAME }}:${{ env.MINOR }}
+            ${{ env.IMAGE_NAME }}:${{ env.MAJOR }}
+            ${{ env.IS_LATEST == 'true' && format('{0}:latest', env.IMAGE_NAME) || '' }}
