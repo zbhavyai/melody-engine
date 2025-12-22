@@ -63,7 +63,7 @@ Alternatively, build and run container image locally.
 
 Once the container is running, you can interact with the Melody Engine REST API.
 
-1. Access the API documentation at [localhost/docs](http://127.0.0.1:8080/docs) to explore the available endpoints.
+1. Access the API documentation at [localhost:8080/docs](http://localhost:8080/docs) to explore the available endpoints.
 
 1. Generated audio files are saved locally in the [`outputs`](./outputs) directory.
 
