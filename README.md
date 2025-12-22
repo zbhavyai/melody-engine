@@ -48,25 +48,30 @@ Generate a 1-hour spacey electronica track using the REST API.
 
    ```shell
    curl \
-   --request POST \
-   --location 'localhost:8080/api/v1/jobs' \
-   --header 'Content-Type: application/json' \
-   --data '{
-      "prompt": "spacey electronica with drifting pads and gentle rhythmic motion",
-      "duration_s": 3600,
-      "gain_db": 0,
-      "format": "mp3"
-   }'
+      --request POST \
+      --location 'localhost:8080/api/v1/jobs' \
+      --header 'Content-Type: application/json' \
+      --data '{
+         "prompt": "spacey electronica with drifting pads and gentle rhythmic motion",
+         "duration_s": 3600,
+         "gain_db": 0,
+         "format": "mp3"
+      }'
    ```
 
 1. Poll the status of your job.
 
    ```shell
-   curl --request GET --location 'localhost:8080/api/v1/jobs/{job_id}'
+   curl \
+      --request GET \
+      --location 'localhost:8080/api/v1/jobs/{job_id}'
    ```
 
 1. Once the job is complete, you may download the generated audio file.
 
    ```shell
-   curl --request GET --location 'localhost:8080/api/v1/jobs/{job_id}/download' --output output.mp3
+   curl \
+      --request GET \
+      --location 'localhost:8080/api/v1/jobs/{job_id}/download' \
+      --output 'generated_track.mp3'
    ```
