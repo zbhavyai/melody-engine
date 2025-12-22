@@ -29,6 +29,12 @@ Use the pre-built container image from Docker Hub to run Melody Engine.
       docker.io/zbhavyai/melody-engine:latest
    ```
 
+1. Create output and cache directories on the host
+
+   ```shell
+   mkdir -p "$(pwd)/outputs" && mkdir -p "$HOME/.cache/melody-engine"
+   ```
+
 1. Run the container. This will load MagentaRT on your GPU and start a `uvicorn` server on port `8080`.
 
    ```shell
