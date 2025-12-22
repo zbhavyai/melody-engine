@@ -20,7 +20,34 @@ You would need a machine with a powerful Nvidia GPU, and a linux host with `podm
 
 ## :rocket: Getting started
 
-Build and run Melody Engine locally inside a container.
+Use the pre-built container image from Docker Hub to run Melody Engine.
+
+1. Pull the latest container image from Docker Hub.
+
+   ```shell
+   podman image pull \
+      docker.io/zbhavyai/melody-engine:latest
+   ```
+
+1. Run the container. This will load MagentaRT on your GPU and start a `uvicorn` server on port `8080`.
+
+   ```shell
+   podman container run \
+      --detach \
+      --name melody-engine \
+      --restart unless-stopped \
+      --publish 8080:8080 \
+      --security-opt=label=disable \
+      --device=nvidia.com/gpu=all \
+      --env TF_GPU_ALLOCATOR=cuda_malloc_async \
+      --device=nvidia.com/gpu=all \
+      --publish 8080:8080 \
+      --volume "$(pwd)/outputs:/opt/app/outputs:rw,Z" \
+      --volume "$HOME/.cache/melody-engine:/magenta-realtime/cache:rw,Z" \
+      docker.io/zbhavyai/melody-engine:latest
+   ```
+
+Alternatively, build and run container image locally.
 
 1. Build the container image.
 
