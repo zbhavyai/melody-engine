@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Builds container image using make container-build and pushes to Docker Hub.
+# Manual alternative to .github/workflows/container.yml workflow, because of disk space restraints.
+
 set -euo pipefail
 
 IMAGE_BASE="docker.io/zbhavyai/melody-engine"
