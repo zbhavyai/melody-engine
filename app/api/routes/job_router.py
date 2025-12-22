@@ -2,7 +2,7 @@ import asyncio
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi.responses import FileResponse
 
 from app.schemas.job_schema import Job, JobAcknowledgment, JobRequest, JobStatus
@@ -81,6 +81,7 @@ async def download_job_artifact(job_id: UUID) -> FileResponse:
     Download the output file for a completed job.
     """
     logger.debug("download_job_artifact")
+
     try:
         path = job_manager.get_file_path_for_job(job_id)
 
@@ -101,3 +102,44 @@ async def download_job_artifact(job_id: UUID) -> FileResponse:
     except Exception as e:
         logger.error("Unexpected error while retrieving file for job id=%s: %s", job_id, str(e))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.delete(
+    "/{job_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def cancel_job(job_id: UUID) -> None:
+    """
+    Cancel a job by its ID.
+    """
+    logger.debug("cancel_job")
+
+    try:
+        job_manager.cancel_job(job_id)
+    except KeyError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        logger.error("Unexpected error while cancelling job id=%s: %s", job_id, str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.delete(
+    "",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def clear_jobs(
+    status_filter: JobStatus | None = Query(default=None, alias="status"),
+) -> None:
+    """
+    Clear jobs by status.
+
+    - status=QUEUED     -> cancel queued jobs
+    - status=COMPLETED  -> delete completed jobs
+    - status=FAILED     -> delete failed jobs
+    - no status         -> delete all except processing jobs
+    """
+    logger.warning("Clearing jobs with status=%s", status_filter)
+
+    job_manager.clear_jobs(status_filter)

@@ -34,8 +34,8 @@ class JobManager:
         """
         Starts the background worker.
         """
-
         logger.info("Starting background worker")
+
         await asyncio.to_thread(self.engine.load_magenta_rt_in_memory)
         self.worker_task = asyncio.create_task(self._worker())
         logger.info("Background worker started.")
@@ -44,8 +44,8 @@ class JobManager:
         """
         Stops the background worker.
         """
-
         logger.info("Stopping background worker")
+
         if self.worker_task:
             self.worker_task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
@@ -56,7 +56,6 @@ class JobManager:
         Submits a job.
         Raises asyncio.QueueFull if queue is full.
         """
-
         job = Job.from_request(job_id=uuid.uuid4(), request=request)
         logger.info("Creating job with id=%s", job.id)
         logger.debug("Job details: %s", job)
@@ -72,8 +71,8 @@ class JobManager:
         """
         Retrieves a job by ID.
         """
-
         logger.info("Get job by id=%s", job_id)
+
         return self.jobs.get(job_id)
 
     def get_file_path_for_job(self, job_id: UUID) -> Path:
@@ -97,6 +96,55 @@ class JobManager:
         logger.info(f"Retrieve file path for job id={job_id}: {path}")
         return path
 
+    def cancel_job(self, job_id: UUID) -> None:
+        """
+        Cancel a job by its ID.
+        """
+        logger.info("Cancel job by id=%s", job_id)
+
+        job = self.get_job(job_id)
+
+        if job is None:
+            raise KeyError("Job not found")
+
+        if job.status == JobStatus.PROCESSING:
+            raise ValueError("Cannot cancel a processing job")
+
+        # best-effort artifact cleanup
+        if job.output_name:
+            path = Path(settings.output_dir) / job.output_name
+            if path.exists():
+                path.unlink()
+
+        del self.jobs[job_id]
+        logger.info("Cancelled and removed job id=%s", job_id)
+
+    def clear_jobs(self, status: JobStatus | None = None) -> int:
+        """
+        Clear jobs by status.
+        """
+        logger.info("Clearing jobs with status=%s", status)
+
+        removed = 0
+
+        for job_id, job in list(self.jobs.items()):
+            if job.status == JobStatus.PROCESSING:
+                # skip processing jobs
+                continue
+
+            if status is None or job.status == status:
+                # best-effort artifact cleanup
+                if job.output_name:
+                    path = Path(settings.output_dir) / job.output_name
+                    if path.exists():
+                        path.unlink()
+
+                del self.jobs[job_id]
+                removed += 1
+
+        logger.warning("Removed %d jobs", removed)
+        return removed
+
     async def _worker(self) -> None:
         """
         Infinite loop processing jobs from the queue.
@@ -106,7 +154,12 @@ class JobManager:
         while True:
             try:
                 job_id = await self.queue.get()
-                job = self.jobs[job_id]
+                job = self.jobs.get(job_id)
+
+                if job is None:
+                    logger.info("Skipping cancelled job id=%s", job_id)
+                    self.queue.task_done()
+                    continue
 
                 job.status = JobStatus.PROCESSING
                 logger.info("Processing job with id=%s", job_id)
