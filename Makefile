@@ -8,7 +8,7 @@ REVISION := $(shell git rev-parse --short HEAD)
 init:
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@mkdir -p outputs
-	@uv sync
+	@uv sync --no-install-project
 
 clean:
 	@rm -rf build/ dist/ *.egg-info/ .venv/ .mypy_cache/ .ruff_cache/
