@@ -58,7 +58,7 @@ jobs:
           build-args: |
             REVISION=${{ env.VERSION }}
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-            ${{ env.IMAGE_NAME }}:${{ env.MINOR }}
-            ${{ env.IMAGE_NAME }}:${{ env.MAJOR }}
-            ${{ env.IS_LATEST == 'true' && format('{0}:latest', env.IMAGE_NAME) || '' }}
+            ${{ vars.IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ vars.IMAGE_NAME }}:${{ env.MINOR }}
+            ${{ vars.IMAGE_NAME }}:${{ env.MAJOR }}
+            ${{ env.IS_LATEST == 'true' && format('{0}:latest', vars.IMAGE_NAME) || '' }}
