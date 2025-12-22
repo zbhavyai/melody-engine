@@ -10,14 +10,14 @@ jobs:
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
-  container:
-    uses: ./.github/workflows/container.yml
-    needs: lint
-    secrets: inherit
+  # container:
+  #   uses: ./.github/workflows/container.yml
+  #   needs: lint
+  #   secrets: inherit
 
   create-release:
     runs-on: ubuntu-latest
-    needs: container
+    # needs: container
 
     permissions:
       contents: write
