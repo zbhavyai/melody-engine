@@ -16,7 +16,7 @@ Melody Engine is a thin but practical wrapper on [MagentaRT](https://github.com/
 
 ## :toolbox: Requirements
 
-You would need a machine with a powerful Nvidia GPU, and a linux host with `podman` or `docker` installed. The MagentaRT's official repository suggests a GPU with 40GB VRAM, but in my experience, a powerful enough GPU like NVIDIA RTX A5000 with 24GB VRAM works just fine.
+You would need a machine with a powerful Nvidia GPU, and a linux host with `podman` or `docker` installed. The MagentaRT's official repository suggests a GPU with at least 40GB VRAM, but in my experience, a powerful enough GPU like NVIDIA RTX A5000 with 24GB VRAM works just fine, especially for what I have experimented with.
 
 ## :rocket: Getting started
 
@@ -34,7 +34,9 @@ Build and run Melody Engine locally inside a container.
    make container-run
    ```
 
-1. Access the API documentation at [localhost/docs](http://127.0.0.1/docs) to explore the available endpoints.
+Once the container is running, you can interact with the Melody Engine REST API.
+
+1. Access the API documentation at [localhost/docs](http://127.0.0.1:8080/docs) to explore the available endpoints.
 
 1. Generated audio files are saved locally in the [`outputs`](./outputs) directory.
 
