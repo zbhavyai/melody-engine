@@ -12,7 +12,7 @@ Melody Engine is a thin but practical wrapper on [MagentaRT](https://github.com/
 1. REST API for programmatic music generation
 1. Serialized job queue to avoid GPU thrashing
 1. Containerized runtime for reproducible deployment
-1. Simple interface that hides MagentaRT’s operational complexity
+1. Simple interface that hides MagentaRT's operational complexity
 
 ## :toolbox: Requirements
 
@@ -20,7 +20,7 @@ You would need a machine with a powerful Nvidia GPU, and a linux host with `podm
 
 ## :rocket: Getting started
 
-Use the pre-built container image from Docker Hub to run Melody Engine.
+Use the [pre-built container image](https://hub.docker.com/r/zbhavyai/melody-engine) from Docker Hub to run Melody Engine.
 
 1. Pull the latest container image from Docker Hub.
 
