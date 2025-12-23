@@ -28,4 +28,30 @@ function py_lint() {
     fi
 }
 
-(py_lint) || exit $?
+function sh_lint() {
+    mapfile -d '' -t staged_sh < <(git diff --cached --name-only -z --diff-filter=ACMR -- '*.sh' || true)
+
+    if ((${#staged_sh[@]} == 0)); then
+        return 0
+    fi
+
+    for f in "${staged_sh[@]}"; do
+        if [[ ! -f "$f" ]]; then
+            continue
+        fi
+
+        if ! uv run shfmt --diff --indent 4 -- "$f"; then
+            block "[ERROR] shfmt failed for $f"
+        fi
+
+        if ! uv run shellcheck --external-sources --exclude=SC2034 -- "$f"; then
+            block "[ERROR] shellcheck failed for $f"
+        fi
+    done
+}
+
+CHECKS="py_lint sh_lint"
+
+for CHECK in $CHECKS; do
+    ($CHECK) || exit $?
+done

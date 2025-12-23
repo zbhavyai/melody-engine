@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["mypy", "ruff"]
+dev = ["mypy", "ruff", "shellcheck-py", "shfmt-py"]
 
 [project.scripts]
 melody-engine = "app.cli:main"
