@@ -194,12 +194,40 @@ els.form.addEventListener("submit", async (e) => {
 });
 
 // -------------------------
-els.clearBtn.addEventListener("click", async () => {
-  if (!confirm("Clear all jobs?")) return;
-  await fetch(`${API_BASE}/jobs`, { method: "DELETE" });
-  showToast("Jobs cleared");
-  fetchJobs();
+els.clearBtn.addEventListener("click", () => {
+  showConfirmModal({
+    title: "Clear job history",
+    body: "Delete all jobs and their output files?",
+    onConfirm: async () => {
+      await fetch(`${API_BASE}/jobs`, { method: "DELETE" });
+      showToast("Jobs cleared");
+      fetchJobs();
+    },
+  });
 });
+
+let confirmAction = null;
+const confirmModalEl = document.getElementById("confirm-modal");
+const confirmModal = new bootstrap.Modal(confirmModalEl);
+
+const confirmTitleEl = document.getElementById("confirm-modal-title");
+const confirmBodyEl = document.getElementById("confirm-modal-body");
+const confirmOkBtn = document.getElementById("confirm-modal-ok");
+
+confirmOkBtn.addEventListener("click", async () => {
+  if (typeof confirmAction === "function") {
+    await confirmAction();
+  }
+  confirmAction = null;
+  confirmModal.hide();
+});
+
+function showConfirmModal({ title, body, onConfirm }) {
+  confirmTitleEl.textContent = title;
+  confirmBodyEl.textContent = body;
+  confirmAction = onConfirm;
+  confirmModal.show();
+}
 
 window.cancelJob = async (id) => {
   await fetch(`${API_BASE}/jobs/${id}`, { method: "DELETE" });

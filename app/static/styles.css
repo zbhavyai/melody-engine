@@ -259,3 +259,12 @@ input[type="number"] {
   background-color: var(--theme-bg-2);
   color: var(--theme-text);
 }
+
+/* MODAL BACKDROP ************************************************************/
+.modal-backdrop.fade.show {
+  opacity: 0.65;
+}
+
+.modal-backdrop {
+  background-color: #000;
+}
