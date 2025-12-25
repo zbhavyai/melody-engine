@@ -195,9 +195,9 @@ els.form.addEventListener("submit", async (e) => {
 
 // -------------------------
 els.clearBtn.addEventListener("click", async () => {
-  if (!confirm("Cancel all queued jobs?")) return;
-  await fetch(`${API_BASE}/jobs?status=QUEUED`, { method: "DELETE" });
-  showToast("Queue cleared");
+  if (!confirm("Clear all jobs?")) return;
+  await fetch(`${API_BASE}/jobs`, { method: "DELETE" });
+  showToast("Jobs cleared");
   fetchJobs();
 });
 
