@@ -178,7 +178,7 @@ class JobManager:
                     # run blocking engine in a separate thread
                     await asyncio.to_thread(
                         self.engine.generate_music,
-                        prompt=job.prompt,
+                        prompt=job.prompt.strip(),
                         duration_ms=int(job.duration_s * 1000),
                         out_path=str(out_path),
                         fmt=job.format,
