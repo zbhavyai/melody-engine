@@ -102,7 +102,7 @@ class AudioEngine:
         num_chunks = int(np.ceil(duration_s / self._model.config.chunk_length))
         num_samples = round(duration_s * self._model.sample_rate)
 
-        logger.info("Starting generation for '%s' (%s)s", prompt, duration_s)
+        logger.info("Starting generation for '%s' for %s seconds", prompt, duration_s)
 
         for _ in range(num_chunks):
             chunk, state = self._model.generate_chunk(state=state, style=style)

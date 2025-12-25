@@ -1,4 +1,4 @@
-const API_BASE = "http://192.168.127.145:8080/api/v1";
+const API_BASE = "/api/v1";
 
 const els = {
   form: document.getElementById("generator-form"),
@@ -10,9 +10,28 @@ const els = {
   clearBtn: document.getElementById("clear-queue-btn"),
   toastEl: document.getElementById("toast"),
   toastMsg: document.getElementById("toast-msg"),
+  statusEl: document.getElementById("api-status"),
 };
 
 const toast = new bootstrap.Toast(els.toastEl);
+
+// -------------------------
+function setApiStatus(isOnline) {
+  els.statusEl.classList.toggle("is-offline", !isOnline);
+  els.statusEl.innerHTML = `
+    <i class="bi bi-circle-fill me-1"></i>
+    ${isOnline ? "Online" : "Offline"}
+  `;
+}
+
+async function pingApi() {
+  try {
+    const res = await fetch(`${API_BASE}/ping`, { cache: "no-store" });
+    setApiStatus(res.ok);
+  } catch {
+    setApiStatus(false);
+  }
+}
 
 // -------------------------
 function showToast(msg) {
@@ -199,5 +218,8 @@ function setLoading(state) {
 }
 
 // -------------------------
+pingApi();
+setInterval(pingApi, 5000);
+
 fetchJobs();
-setInterval(fetchJobs, 3000);
+setInterval(fetchJobs, 5000);
