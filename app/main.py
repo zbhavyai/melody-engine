@@ -7,7 +7,7 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 import setuptools_scm
-from fastapi import FastAPI
+from fastapi import FastAPI, staticfiles
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
@@ -95,3 +95,9 @@ app.add_middleware(
 )
 
 app.include_router(router=api_router, prefix="/api")
+
+app.mount(
+    "/",
+    staticfiles.StaticFiles(directory=str(Path(__file__).parent / "static"), html=True),
+    name="static",
+)
