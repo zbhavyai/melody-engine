@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from uuid import UUID
 
@@ -54,7 +54,7 @@ class Job(_FromORM):
             duration_s=request.duration_s,
             gain_db=request.gain_db,
             format=request.format,
-            created_at=datetime.now(),
+            created_at=datetime.now(UTC),
             status=JobStatus.QUEUED,
             output_name=output_name,
             message=message,
