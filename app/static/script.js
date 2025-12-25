@@ -177,13 +177,22 @@ els.form.addEventListener("submit", async (e) => {
   setLoading(true);
 
   try {
+    if (!payload.prompt) {
+      showToast("Prompt is required");
+      return;
+    }
+
     const res = await fetch(`${API_BASE}/jobs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    if (!res.ok) throw new Error();
+    if (!res.ok) {
+      showToast("Failed to queue job");
+      throw new Error();
+    }
+
     showToast("Job queued");
     els.form.reset();
     els.gainVal.textContent = "0dB";
