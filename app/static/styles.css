@@ -152,6 +152,10 @@ body {
   text-overflow: ellipsis;
 }
 
+.duration-cell {
+  font-variant-numeric: tabular-nums;
+}
+
 .created-cell {
   font-variant-numeric: tabular-nums;
 }
@@ -161,15 +165,19 @@ body {
 }
 
 .col-prompt {
-  width: 55%;
+  width: 46%;
+}
+
+.col-duration {
+  width: 12%;
 }
 
 .col-created {
-  width: 15%;
+  width: 12%;
 }
 
 .col-actions {
-  width: 15%;
+  width: 12%;
 }
 
 /* STATUS BADGES *************************************************************/

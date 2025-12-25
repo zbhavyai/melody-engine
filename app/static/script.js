@@ -57,6 +57,9 @@ function renderJobs(jobs) {
       <td class="prompt-cell" title="${job.prompt}">
         ${job.prompt}
       </td>
+      <td class="duration-cell">
+        ${formatDuration(job.duration_s)}
+      </td>
       <td class="created-cell">
         ${new Date(job.created_at).toLocaleTimeString([], {
           hour12: false,
@@ -69,6 +72,16 @@ function renderJobs(jobs) {
 
     els.queueBody.appendChild(tr);
   }
+}
+
+function formatDuration(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 
 function renderActions(job) {
