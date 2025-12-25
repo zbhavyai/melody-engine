@@ -1,4 +1,4 @@
-const API_BASE = "/api/v1";
+const API_BASE = "http://192.168.127.145:8080/api/v1";
 
 const els = {
   form: document.getElementById("generator-form"),
@@ -72,22 +72,56 @@ function renderJobs(jobs) {
 }
 
 function renderActions(job) {
-  if (job.status === "COMPLETED" && job.filename) {
-    return `
-      <a class="btn btn-sm btn-outline-primary"
-         href="${API_BASE}/jobs/${job.id}/download">
-        <i class="bi bi-download"></i>
-      </a>`;
-  }
-
+  // queued -> cancel
   if (job.status === "QUEUED") {
     return `
-      <button class="btn btn-sm btn-outline-danger"
-        onclick="cancelJob('${job.id}')">
-        Cancel
-      </button>`;
+      <button
+        class="btn btn-sm btn-outline-danger"
+        title="Cancel job"
+        onclick="cancelJob('${job.id}')"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    `;
   }
 
+  // completed -> download + delete
+  if (job.status === "COMPLETED") {
+    return `
+      <div class="action-buttons">
+        <a
+          class="btn btn-sm btn-outline-primary"
+          href="${API_BASE}/jobs/${job.id}/download"
+          title="Download file"
+        >
+          <i class="bi bi-download"></i>
+        </a>
+
+        <button
+          class="btn btn-sm btn-outline-warning"
+          title="Delete job and file"
+          onclick="cancelJob('${job.id}')"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    `;
+  }
+
+  // failed -> delete
+  if (job.status === "FAILED") {
+    return `
+      <button
+        class="btn btn-sm btn-outline-danger"
+        title="Delete failed job"
+        onclick="cancelJob('${job.id}')"
+      >
+        <i class="bi bi-trash"></i>
+      </button>
+    `;
+  }
+
+  // processing -> no actions
   return "";
 }
 
