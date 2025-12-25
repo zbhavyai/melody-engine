@@ -58,7 +58,7 @@ class JobManager:
         """
         job = Job.from_request(job_id=uuid.uuid4(), request=request)
         logger.info("Creating job with id=%s", job.id)
-        logger.debug("Job details: %s", job)
+        logger.info("Job details: %s", job)
 
         # this raises QueueFull immediately if the queue is full
         self.queue.put_nowait(job.id)
