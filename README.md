@@ -12,7 +12,7 @@ Melody Engine is a thin but practical wrapper on [MagentaRT](https://github.com/
 1. REST API for programmatic music generation
 1. Serialized job queue to avoid GPU thrashing
 1. Containerized runtime for reproducible deployment
-1. Simple interface that hides MagentaRT's operational complexity
+1. Web interface that hides MagentaRT's operational complexity
 
 ## :toolbox: Requirements
 
@@ -67,9 +67,9 @@ Alternatively, build and run container image locally.
    make container-run
    ```
 
-Once the container is running, you can interact with the Melody Engine REST API.
+Once the container is running, you can interact with the Melody Engine web interface or REST API.
 
-1. Access the API documentation at [localhost:8080/docs](http://localhost:8080/docs) to explore the available endpoints.
+1. Access the web interface at [localhost:8080](http://127.0.0.1:8080) or explore the API documentation at [localhost:8080/docs](http://127.0.0.1:8080/docs).
 
 1. Generated audio files are saved locally in the [`outputs`](./outputs) directory.
 
