@@ -1,0 +1,35 @@
+# git related
+.git
+.gitignore
+.gitattributes
+.github
+.hooks
+
+# python environments
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# build and distribution folders
+dist
+build
+*.egg-info
+
+# ide settings
+.idea
+.vscode
+.editorconfig
+
+# cache and logs
+logs
+outputs
+.mypy_cache
+.ruff_cache
+
+# docker/build scripts
+Dockerfile
+compose.yaml
+Makefile
+scripts
