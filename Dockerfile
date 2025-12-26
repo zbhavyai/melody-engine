@@ -1,5 +1,11 @@
 FROM us-docker.pkg.dev/brain-magenta/magenta-rt/magenta-rt:gpu
 ARG REVISION
+LABEL org.opencontainers.image.title="Melody Engine"
+LABEL org.opencontainers.image.description="Prompt based instrumental music generation"
+LABEL org.opencontainers.image.source="https://github.com/zbhavyai/melody-engine"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.authors="Bhavyai Gupta <https://zbhavyai.github.io>"
+LABEL org.opencontainers.image.version="${REVISION}"
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=${REVISION} \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
