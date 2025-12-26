@@ -68,7 +68,7 @@ Once the container is running, you can interact with the Melody Engine web inter
 
 1. Access the web interface at [localhost:8080](http://127.0.0.1:8080) or explore the API documentation at [localhost:8080/docs](http://127.0.0.1:8080/docs).
 
-1. Generated audio files are saved locally in the [`outputs`](./outputs) directory.
+1. Generated audio files are saved locally in the [`outputs`](./outputs) directory, or can be downloaded from the web interface or REST API.
 
 ## :headphones: Example
 
