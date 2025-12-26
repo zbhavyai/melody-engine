@@ -44,10 +44,8 @@ Use the [pre-built container image](https://hub.docker.com/r/zbhavyai/melody-eng
       --restart unless-stopped \
       --publish 8080:8080 \
       --security-opt=label=disable \
-      --device=nvidia.com/gpu=all \
       --env TF_GPU_ALLOCATOR=cuda_malloc_async \
       --device=nvidia.com/gpu=all \
-      --publish 8080:8080 \
       --volume "$(pwd)/outputs:/opt/app/outputs:rw,Z" \
       --volume "$HOME/.cache/melody-engine:/magenta-realtime/cache:rw,Z" \
       docker.io/zbhavyai/melody-engine:latest
