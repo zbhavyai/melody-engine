@@ -10,7 +10,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /opt/app
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml uv.lock ./
-RUN uv export --frozen --no-emit-project --format requirements.txt -o requirements.txt
+RUN uv export --quiet --frozen --no-emit-project --no-group dev --format requirements.txt -o requirements.txt
 RUN uv pip install -r requirements.txt
 COPY app/ ./app/
 EXPOSE 8080
