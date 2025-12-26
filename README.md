@@ -25,8 +25,7 @@ Use the [pre-built container image](https://hub.docker.com/r/zbhavyai/melody-eng
 1. Pull the latest container image from Docker Hub.
 
    ```shell
-   podman image pull \
-      docker.io/zbhavyai/melody-engine:latest
+   podman image pull docker.io/zbhavyai/melody-engine:latest
    ```
 
 1. Create output and cache directories on the host
