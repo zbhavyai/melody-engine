@@ -1,5 +1,5 @@
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -9,7 +9,7 @@ class _FromORM(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class JobStatus(str, Enum):
+class JobStatus(StrEnum):
     QUEUED = "QUEUED"
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
